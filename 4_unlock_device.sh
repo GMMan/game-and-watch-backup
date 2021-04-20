@@ -12,10 +12,12 @@ then
 fi
 
 echo "Validating internal flash backup before proceeding..."
-if ! shasum --check shasums/internal_flash_backup.bin.sha1 >/dev/null 2>&1; then
+cd backups
+if ! shasum --check ../shasums/internal_flash_backup.bin.sha1 >/dev/null 2>&1; then
     echo "Backup is not valid. Aborting."
     exit 1
 fi
+cd -
 
 echo "Unlocking device... (Takes up to 30 seconds.)"    
 if ! ${OPENOCD} -f openocd/interface_"${ADAPTER}".cfg \

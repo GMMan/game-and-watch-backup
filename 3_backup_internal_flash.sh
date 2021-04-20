@@ -15,12 +15,14 @@ if ! dd if=backups/flash_backup.bin of=backups/flash_backup_checksummed.bin coun
     exit 1
 fi
 
-if ! shasum --check shasums/flash_backup_checksummed.bin.sha1 >/dev/null 2>&1; then
+cd backups
+if ! shasum --check ../shasums/flash_backup_checksummed.bin.sha1 >/dev/null 2>&1; then
     echo "*** External flash backup does not verify correctly ***"
     echo "Please run ./2_backup_flash.sh again"
     rm backups/flash_backup_checksummed.bin
     exit 1
 fi
+cd -
 
 rm backups/flash_backup_checksummed.bin
 
@@ -67,10 +69,12 @@ if ! ${OPENOCD} -f openocd/interface_"${ADAPTER}".cfg \
 fi
 
 echo "Verifying internal flash backup..."
-if ! shasum --check shasums/internal_flash_backup.bin.sha1 >/dev/null 2>&1; then
+cd backups
+if ! shasum --check ../shasums/internal_flash_backup.bin.sha1 >/dev/null 2>&1; then
     echo "The backup of the internal flash failed. Please try again."
     exit 1
 fi
+cd -
 
 rm new_flash_image.bin
 

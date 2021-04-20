@@ -23,10 +23,12 @@ if ! ${OPENOCD} -f openocd/flash_"${ADAPTER}".cfg >>logs/2_openocd.log 2>&1; the
 fi
 
 echo "Validating ITCM dump..."
-if ! shasum --check shasums/itcm_backup.bin.sha1 >/dev/null 2>&1; then
+cd backups
+if ! shasum --check ../shasums/itcm_backup.bin.sha1 >/dev/null 2>&1; then
     echo "Failed to correctly dump ITCM. Restart Game & Watch and try again."
     exit 1
 fi
+cd -
 
 
 echo "Extracting checksummed part..."
@@ -37,10 +39,12 @@ if ! dd if=backups/flash_backup.bin of=backups/flash_backup_checksummed.bin coun
 fi
 
 echo "Validating checksum..."
-if ! shasum --check shasums/flash_backup_checksummed.bin.sha1 >/dev/null 2>&1; then
+cd backups
+if ! shasum --check ../shasums/flash_backup_checksummed.bin.sha1 >/dev/null 2>&1; then
     echo "Failed to verify checksum. Try again."
     exit 1
 fi
+cd -
 
 rm backups/flash_backup_checksummed.bin
 
